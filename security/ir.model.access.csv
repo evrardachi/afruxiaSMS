@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_afruxia_config_user,afruxia.config.user,model_afruxia_config,base.group_user,1,1,1,0
+access_afruxia_config_manager,afruxia.config.manager,model_afruxia_config,base.group_system,1,1,1,1
+access_afruxia_sms_user,afruxia.sms.user,model_afruxia_sms,base.group_user,1,1,1,1
+access_afruxia_sms_manager,afruxia.sms.manager,model_afruxia_sms,base.group_system,1,1,1,1

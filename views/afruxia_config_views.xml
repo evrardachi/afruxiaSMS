@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Ce fichier définit les vues (interfaces) pour la configuration API.
+    Les vues permettent d'afficher et modifier les données dans Odoo.
+-->
+<odoo>
+    <!-- Vue FORMULAIRE : pour créer/modifier une configuration -->
+    <record id="view_afruxia_config_form" model="ir.ui.view">
+        <field name="name">afruxia.config.form</field>
+        <field name="model">afruxia.config</field>
+        <field name="arch" type="xml">
+            <form string="Configuration Afruxia">
+                <!-- Barre d'en-tête avec boutons -->
+                <header>
+                    <button name="action_test_connection"
+                            string="Tester la connexion"
+                            type="object"
+                            class="btn-primary"
+                            help="Vérifie que les identifiants API sont corrects"/>
+                    <!-- Badge d'état de connexion -->
+                    <field name="connection_status" widget="badge"
+                           decoration-success="connection_status == 'success'"
+                           decoration-danger="connection_status == 'failed'"
+                           decoration-info="connection_status == 'not_tested'"/>
+                </header>
+
+                <sheet>
+                    <!-- Widget pour archiver/désarchiver -->
+                    <widget name="web_ribbon" title="Archivé"
+                            bg_color="text-bg-danger"
+                            invisible="active"/>
+
+                    <!-- Groupe principal -->
+                    <group>
+                        <group string="Informations générales">
+                            <field name="name" placeholder="ex: Production"/>
+                            <field name="active" invisible="1"/>
+                            <field name="is_default"/>
+                            <field name="sender_name" placeholder="ex: MaCompany"/>
+                        </group>
+
+                        <group string="Identifiants API">
+                            <field name="api_url"/>
+                            <field name="api_key" password="True"/>
+                            <field name="api_secret" password="True"/>
+                        </group>
+                    </group>
+
+                    <!-- Informations de test -->
+                    <group string="Informations de test" invisible="connection_status == 'not_tested'">
+                        <field name="last_test_date"/>
+                    </group>
+                </sheet>
+
+                <!-- Zone de discussion (chatter) -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue LISTE : pour afficher toutes les configurations -->
+    <record id="view_afruxia_config_tree" model="ir.ui.view">
+        <field name="name">afruxia.config.list</field>
+        <field name="model">afruxia.config</field>
+        <field name="arch" type="xml">
+            <list string="Configurations Afruxia">
+                <field name="name"/>
+                <field name="sender_name"/>
+                <field name="is_default" widget="boolean_toggle"/>
+                <field name="connection_status" widget="badge"
+                       decoration-success="connection_status == 'success'"
+                       decoration-danger="connection_status == 'failed'"
+                       decoration-info="connection_status == 'not_tested'"/>
+                <field name="last_test_date"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vue RECHERCHE : pour filtrer et rechercher -->
+    <record id="view_afruxia_config_search" model="ir.ui.view">
+        <field name="name">afruxia.config.search</field>
+        <field name="model">afruxia.config</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher une configuration">
+                <!-- Champ de recherche -->
+                <field name="name"/>
+                <field name="sender_name"/>
+
+                <!-- Filtres -->
+                <filter string="Par défaut" name="filter_default"
+                        domain="[('is_default', '=', True)]"/>
+                <filter string="Actif" name="filter_active"
+                        domain="[('active', '=', True)]"/>
+                <filter string="Archivé" name="filter_archived"
+                        domain="[('active', '=', False)]"/>
+
+                <separator/>
+
+                <filter string="Connexion OK" name="filter_success"
+                        domain="[('connection_status', '=', 'success')]"/>
+                <filter string="Connexion échouée" name="filter_failed"
+                        domain="[('connection_status', '=', 'failed')]"/>
+
+                <!-- Regroupement -->
+                <group expand="0" string="Regrouper par">
+                    <filter string="État de connexion" name="group_status"
+                            context="{'group_by': 'connection_status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACTION : définit comment ouvrir les vues -->
+    <record id="action_afruxia_config" model="ir.actions.act_window">
+        <field name="name">Configuration API</field>
+        <field name="res_model">afruxia.config</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_filter_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créez votre première configuration Afruxia
+            </p>
+            <p>
+                Vous devez configurer vos identifiants API Afruxia pour pouvoir envoyer des SMS.
+                Cliquez sur "Nouveau" pour commencer.
+            </p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Ce fichier définit les vues pour l'envoi et la gestion des SMS.
+-->
+<odoo>
+    <!-- Vue FORMULAIRE : pour créer et envoyer un SMS -->
+    <record id="view_afruxia_sms_form" model="ir.ui.view">
+        <field name="name">afruxia.sms.form</field>
+        <field name="model">afruxia.sms</field>
+        <field name="arch" type="xml">
+            <form string="Envoyer un SMS">
+                <header>
+                    <!-- Bouton pour envoyer le SMS -->
+                    <button name="action_send_sms"
+                            string="Envoyer"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state not in ['draft', 'failed']"/>
+
+                    <!-- Bouton pour réessayer -->
+                    <button name="action_retry_send"
+                            string="Réessayer"
+                            type="object"
+                            class="btn-warning"
+                            invisible="state != 'failed'"/>
+
+                    <!-- Barre d'état -->
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,sending,sent,delivered"/>
+                </header>
+
+                <sheet>
+                    <!-- Groupe principal -->
+                    <group>
+                        <group string="Destinataire">
+                            <field name="recipient"
+                                   placeholder="+242XXXXXXXXX"
+                                   readonly="state != 'draft'"/>
+                            <field name="sender" readonly="1"/>
+                        </group>
+
+                        <group string="Configuration">
+                            <field name="config_id"
+                                   options="{'no_create': True}"
+                                   readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+
+                    <!-- Message -->
+                    <group string="Message">
+                        <field name="message"
+                               placeholder="Tapez votre message ici..."
+                               readonly="state != 'draft'"/>
+                    </group>
+
+                    <!-- Statistiques du message -->
+                    <group>
+                        <group string="Statistiques">
+                            <field name="character_count"/>
+                            <field name="sms_count"/>
+                        </group>
+
+                        <group string="Dates">
+                            <field name="sent_date"/>
+                            <field name="delivery_date"/>
+                        </group>
+                    </group>
+
+                    <!-- Informations techniques (visibles seulement après envoi) -->
+                    <notebook invisible="state == 'draft'">
+                        <page string="Détails techniques">
+                            <group>
+                                <field name="sms_id"/>
+                                <field name="response_message"/>
+                                <field name="error_message" invisible="state != 'failed'"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <!-- Chatter pour le suivi -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue LISTE : pour afficher tous les SMS -->
+    <record id="view_afruxia_sms_tree" model="ir.ui.view">
+        <field name="name">afruxia.sms.list</field>
+        <field name="model">afruxia.sms</field>
+        <field name="arch" type="xml">
+            <list string="Historique SMS"
+                  decoration-success="state == 'sent'"
+                  decoration-danger="state == 'failed'"
+                  decoration-info="state == 'draft'"
+                  decoration-muted="state == 'delivered'">
+
+                <field name="create_date" string="Date de création"/>
+                <field name="recipient"/>
+                <field name="message" optional="hide"/>
+                <field name="sender"/>
+                <field name="character_count" optional="hide"/>
+                <field name="sms_count"/>
+                <field name="state" widget="badge"
+                       decoration-success="state in ['sent', 'delivered']"
+                       decoration-danger="state == 'failed'"
+                       decoration-warning="state == 'sending'"
+                       decoration-info="state == 'draft'"/>
+                <field name="sent_date"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vue KANBAN : vue en cartes (optionnel mais joli) -->
+    <record id="view_afruxia_sms_kanban" model="ir.ui.view">
+        <field name="name">afruxia.sms.kanban</field>
+        <field name="model">afruxia.sms</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="recipient"/>
+                <field name="message"/>
+                <field name="state"/>
+                <field name="sent_date"/>
+
+                <templates>
+                    <t t-name="card">
+                        <div class="row g-0">
+                            <div class="col-12">
+                                <strong><field name="recipient"/></strong>
+                            </div>
+                            <div class="col-12">
+                                <field name="message" limit="50"/>
+                            </div>
+                            <div class="col-6">
+                                <field name="state" widget="badge"/>
+                            </div>
+                            <div class="col-6 text-end">
+                                <field name="sent_date" widget="date"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Vue RECHERCHE -->
+    <record id="view_afruxia_sms_search" model="ir.ui.view">
+        <field name="name">afruxia.sms.search</field>
+        <field name="model">afruxia.sms</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher un SMS">
+                <!-- Champs de recherche -->
+                <field name="recipient"/>
+                <field name="message"/>
+                <field name="sender"/>
+
+                <!-- Filtres prédéfinis -->
+                <filter string="Brouillons" name="filter_draft"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter string="Envoyés" name="filter_sent"
+                        domain="[('state', '=', 'sent')]"/>
+                <filter string="Échecs" name="filter_failed"
+                        domain="[('state', '=', 'failed')]"/>
+
+                <separator/>
+
+                <filter string="Aujourd'hui" name="filter_today"
+                        domain="[('create_date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00'))]"/>
+                <filter string="Cette semaine" name="filter_week"
+                        domain="[('create_date', '&gt;=', (datetime.datetime.now() - datetime.timedelta(days=7)).strftime('%Y-%m-%d 00:00:00'))]"/>
+                <filter string="Ce mois" name="filter_month"
+                        domain="[('create_date', '&gt;=', (datetime.datetime.now() - datetime.timedelta(days=30)).strftime('%Y-%m-%d 00:00:00'))]"/>
+
+                <!-- Regroupements -->
+                <group expand="0" string="Regrouper par">
+                    <filter string="État" name="group_state"
+                            context="{'group_by': 'state'}"/>
+                    <filter string="Date d'envoi" name="group_sent_date"
+                            context="{'group_by': 'sent_date'}"/>
+                    <filter string="Configuration" name="group_config"
+                            context="{'group_by': 'config_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACTION : pour ouvrir la liste des SMS -->
+    <record id="action_afruxia_sms" model="ir.actions.act_window">
+        <field name="name">Envoyer un SMS</field>
+        <field name="res_model">afruxia.sms</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Envoyez votre premier SMS
+            </p>
+            <p>
+                Cliquez sur "Nouveau" pour composer et envoyer un SMS via Afruxia.
+            </p>
+        </field>
+    </record>
+
+</odoo>

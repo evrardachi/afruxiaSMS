@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Ce fichier définit les menus dans Odoo.
+    Les menus permettent de naviguer dans l'application.
+-->
+<odoo>
+
+    <!-- MENU PRINCIPAL : apparaît dans la barre du haut -->
+    <menuitem id="menu_afruxia_root"
+              name="Afruxia SMS"
+              web_icon="afruxiaSMS,static/description/icon.png"
+              sequence="100"/>
+
+    <!-- SOUS-MENU : Envoi de SMS -->
+    <menuitem id="menu_afruxia_sms"
+              name="SMS"
+              parent="menu_afruxia_root"
+              sequence="10"/>
+
+    <menuitem id="menu_afruxia_sms_send"
+              name="Envoyer un SMS"
+              parent="menu_afruxia_sms"
+              action="action_afruxia_sms"
+              sequence="10"/>
+
+    <!-- SOUS-MENU : Configuration -->
+    <menuitem id="menu_afruxia_config"
+              name="Configuration"
+              parent="menu_afruxia_root"
+              sequence="90"/>
+
+    <menuitem id="menu_afruxia_config_api"
+              name="Configuration API"
+              parent="menu_afruxia_config"
+              action="action_afruxia_config"
+              sequence="10"/>
+
+</odoo>
