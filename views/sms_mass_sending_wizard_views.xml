@@ -4,82 +4,101 @@
 -->
 <odoo>
 
-    <!-- Vue FORMULAIRE du wizard -->
+    <!-- Vue FORMULAIRE du wizard - Version simplifiée -->
     <record id="view_sms_mass_sending_wizard_form" model="ir.ui.view">
         <field name="name">sms.mass.sending.wizard.form</field>
         <field name="model">sms.mass.sending.wizard</field>
         <field name="arch" type="xml">
             <form string="Envoi de SMS en masse">
                 <sheet>
+                    <div class="oe_title">
+                        <h1>Envoi de SMS en masse</h1>
+                        <p class="text-muted">Envoyez le même message à plusieurs destinataires</p>
+                    </div>
+
                     <group>
+                        <group string="Destinataires">
+                            <field name="recipient_selection" widget="radio" options="{'horizontal': true}"/>
+                        </group>
                         <group string="Configuration">
                             <field name="config_id" options="{'no_create': True}"/>
                         </group>
                     </group>
 
-                    <group string="Destinataires">
-                        <field name="recipient_selection" widget="radio"/>
-                    </group>
-
                     <!-- Saisie manuelle -->
-                    <group string="Numéros de téléphone" invisible="recipient_selection != 'manual'">
+                    <group string="📱 Numéros de téléphone" invisible="recipient_selection != 'manual'">
                         <field name="recipients_manual" nolabel="1"
-                               placeholder="Entrez les numéros de téléphone (un par ligne ou séparés par des virgules)&#10;Exemple:&#10;+242XXXXXXXXX&#10;+242YYYYYYYYY"
-                               widget="text"/>
+                               placeholder="Entrez les numéros (un par ligne ou séparés par des virgules)&#10;&#10;Exemple:&#10;+242065123456&#10;+242064789012&#10;+242063456789"
+                               class="o_field_text"/>
                     </group>
 
                     <!-- Sélection depuis les contacts -->
-                    <group string="Sélectionner les contacts" invisible="recipient_selection != 'partners'">
-                        <field name="partner_ids" nolabel="1" widget="many2many_tags">
-                            <list>
-                                <field name="name"/>
-                                <field name="phone"/>
-                            </list>
-                        </field>
+                    <group string="👥 Sélectionner les contacts" invisible="recipient_selection != 'partners'">
+                        <field name="partner_ids" nolabel="1" widget="many2many_tags"
+                               placeholder="Sélectionnez un ou plusieurs contacts..."/>
                     </group>
 
-                    <group string="Message">
+                    <!-- Message -->
+                    <group string="✉️ Message">
                         <field name="message" nolabel="1"
-                               placeholder="Tapez votre message ici..."
-                               widget="text"/>
+                               placeholder="Tapez votre message ici...&#10;&#10;Le même message sera envoyé à tous les destinataires."
+                               class="o_field_text"/>
                     </group>
 
-                    <!-- Statistiques -->
+                    <!-- Statistiques en cartes -->
                     <group>
-                        <group string="Statistiques du message">
-                            <field name="character_count"/>
-                            <field name="sms_count"/>
+                        <group>
+                            <label for="character_count" string="📝 Caractères"/>
+                            <div class="o_stat_info">
+                                <field name="character_count" class="o_stat_value"/>
+                            </div>
+                            <label for="sms_count" string="📨 SMS par destinataire"/>
+                            <div class="o_stat_info">
+                                <field name="sms_count" class="o_stat_value"/>
+                            </div>
                         </group>
-                        <group string="Statistiques d'envoi">
-                            <field name="recipient_count"/>
-                            <field name="total_sms_count"
-                                   decoration-danger="total_sms_count > 100"
-                                   decoration-warning="total_sms_count > 50"
-                                   decoration-success="total_sms_count > 0 and total_sms_count &lt;= 50"/>
+                        <group>
+                            <label for="recipient_count" string="👤 Destinataires"/>
+                            <div class="o_stat_info">
+                                <field name="recipient_count" class="o_stat_value"/>
+                            </div>
+                            <label for="total_sms_count" string="📬 Total de SMS"/>
+                            <div class="o_stat_info">
+                                <field name="total_sms_count" class="o_stat_value"
+                                       decoration-danger="total_sms_count > 100"
+                                       decoration-warning="total_sms_count > 50 and total_sms_count &lt;= 100"
+                                       decoration-success="total_sms_count > 0 and total_sms_count &lt;= 50"/>
+                            </div>
                         </group>
                     </group>
 
-                    <!-- Message d'avertissement si beaucoup de SMS -->
-                    <div class="alert alert-warning" role="alert"
+                    <!-- Avertissements -->
+                    <div class="alert alert-warning mb-3" role="alert"
                          invisible="total_sms_count &lt;= 100">
-                        <strong>Attention !</strong> Vous êtes sur le point d'envoyer
-                        <field name="total_sms_count" readonly="1"/> SMS.
-                        Vérifiez bien votre message et vos destinataires.
+                        <i class="fa fa-warning"/> <strong>Attention !</strong>
+                        Vous allez envoyer <strong><field name="total_sms_count" readonly="1"/> SMS</strong>.
+                        Vérifiez bien votre message et vos destinataires avant d'envoyer.
+                    </div>
+
+                    <div class="alert alert-info mb-3" role="alert"
+                         invisible="recipient_count > 0">
+                        <i class="fa fa-info-circle"/>
+                        Veuillez sélectionner au moins un destinataire pour continuer.
                     </div>
 
                 </sheet>
 
                 <!-- Boutons en bas -->
                 <footer>
-                    <button string="Aperçu"
-                            name="action_preview"
-                            type="object"
-                            class="btn-secondary"
-                            invisible="recipient_count == 0"/>
-                    <button string="Envoyer"
+                    <button string="📤 Envoyer"
                             name="action_send_sms"
                             type="object"
                             class="btn-primary"
+                            invisible="recipient_count == 0"/>
+                    <button string="👁 Aperçu"
+                            name="action_preview"
+                            type="object"
+                            class="btn-secondary"
                             invisible="recipient_count == 0"/>
                     <button string="Annuler"
                             class="btn-secondary"
