@@ -168,22 +168,20 @@
 
                 <separator/>
 
-                <filter string="Aujourd'hui" name="filter_today"
-                        domain="[('create_date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00'))]"/>
-                <filter string="Cette semaine" name="filter_week"
-                        domain="[('create_date', '&gt;=', (datetime.datetime.now() - datetime.timedelta(days=7)).strftime('%Y-%m-%d 00:00:00'))]"/>
-                <filter string="Ce mois" name="filter_month"
-                        domain="[('create_date', '&gt;=', (datetime.datetime.now() - datetime.timedelta(days=30)).strftime('%Y-%m-%d 00:00:00'))]"/>
+                <filter string="Date de création" name="filter_create_date"
+                        date="create_date"/>
+                <filter string="Date d'envoi" name="filter_sent_date"
+                        date="sent_date"/>
+
+                <separator/>
 
                 <!-- Regroupements -->
-                <group expand="0" string="Regrouper par">
-                    <filter string="État" name="group_state"
-                            context="{'group_by': 'state'}"/>
-                    <filter string="Date d'envoi" name="group_sent_date"
-                            context="{'group_by': 'sent_date'}"/>
-                    <filter string="Configuration" name="group_config"
-                            context="{'group_by': 'config_id'}"/>
-                </group>
+                <filter string="Grouper par État" name="group_state"
+                        context="{'group_by': 'state'}"/>
+                <filter string="Grouper par Date d'envoi" name="group_sent_date"
+                        context="{'group_by': 'sent_date'}"/>
+                <filter string="Grouper par Configuration" name="group_config"
+                        context="{'group_by': 'config_id'}"/>
             </search>
         </field>
     </record>

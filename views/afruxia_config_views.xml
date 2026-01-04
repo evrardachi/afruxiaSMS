@@ -105,11 +105,11 @@
                 <filter string="Connexion échouée" name="filter_failed"
                         domain="[('connection_status', '=', 'failed')]"/>
 
+                <separator/>
+
                 <!-- Regroupement -->
-                <group expand="0" string="Regrouper par">
-                    <filter string="État de connexion" name="group_status"
-                            context="{'group_by': 'connection_status'}"/>
-                </group>
+                <filter string="État de connexion" name="group_status"
+                        context="{'group_by': 'connection_status'}"/>
             </search>
         </field>
     </record>
