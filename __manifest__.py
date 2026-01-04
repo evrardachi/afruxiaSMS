@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Afruxia SMS',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.0.1',
     'category': 'Tools',
     'summary': 'Envoi de SMS via l\'API Afruxia',
     'description': """
