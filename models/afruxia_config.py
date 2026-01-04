@@ -83,15 +83,18 @@ class AfruxiaConfig(models.Model):
          'Une seule configuration peut être définie par défaut')
     ]
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         """
         Méthode appelée lors de la création d'un nouvel enregistrement.
         Si is_default=True, on désactive les autres configurations par défaut.
         """
-        if vals.get('is_default'):
-            self.search([('is_default', '=', True)]).write({'is_default': False})
-        return super(AfruxiaConfig, self).create(vals)
+        # Vérifie si l'un des enregistrements à créer est marqué comme défaut
+        for vals in vals_list:
+            if vals.get('is_default'):
+                self.search([('is_default', '=', True)]).write({'is_default': False})
+                break  # Un seul suffit
+        return super(AfruxiaConfig, self).create(vals_list)
 
     def write(self, vals):
         """
