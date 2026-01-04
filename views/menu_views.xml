@@ -5,6 +5,14 @@
 -->
 <odoo>
 
+    <!-- ACTION pour l'envoi en masse (doit être défini avant le menu) -->
+    <record id="action_sms_mass_sending_wizard" model="ir.actions.act_window">
+        <field name="name">Envoi de SMS en masse</field>
+        <field name="res_model">sms.mass.sending.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
     <!-- MENU PRINCIPAL : apparaît dans la barre du haut -->
     <menuitem id="menu_afruxia_root"
               name="Afruxia SMS"

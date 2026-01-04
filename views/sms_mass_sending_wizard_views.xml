@@ -89,12 +89,4 @@
         </field>
     </record>
 
-    <!-- ACTION pour ouvrir le wizard -->
-    <record id="action_sms_mass_sending_wizard" model="ir.actions.act_window">
-        <field name="name">Envoi de SMS en masse</field>
-        <field name="res_model">sms.mass.sending.wizard</field>
-        <field name="view_mode">form</field>
-        <field name="target">new</field> <!-- Ouvre dans une popup -->
-    </record>
-
 </odoo>
