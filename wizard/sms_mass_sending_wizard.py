@@ -50,7 +50,7 @@ class SmsMassSendingWizard(models.TransientModel):
     partner_ids = fields.Many2many(
         'res.partner',
         string='Contacts',
-        domain=[('mobile', '!=', False)],  # Seulement les contacts avec un mobile
+        domain=[('phone', '!=', False)],  # Seulement les contacts avec un téléphone
         help='Sélectionnez les contacts à qui envoyer le SMS'
     )
 
@@ -155,8 +155,8 @@ class SmsMassSendingWizard(models.TransientModel):
 
         else:  # partners
             for partner in self.partner_ids:
-                if partner.mobile:
-                    recipients.append((partner.mobile, partner.name))
+                if partner.phone:
+                    recipients.append((partner.phone, partner.name))
 
         return recipients
 

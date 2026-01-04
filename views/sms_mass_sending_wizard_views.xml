@@ -33,7 +33,7 @@
                         <field name="partner_ids" nolabel="1" widget="many2many_tags">
                             <list>
                                 <field name="name"/>
-                                <field name="mobile"/>
+                                <field name="phone"/>
                             </list>
                         </field>
                     </group>
