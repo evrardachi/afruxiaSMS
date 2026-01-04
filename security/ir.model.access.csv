@@ -3,3 +3,5 @@ access_afruxia_config_user,afruxia.config.user,model_afruxia_config,base.group_u
 access_afruxia_config_manager,afruxia.config.manager,model_afruxia_config,base.group_system,1,1,1,1
 access_afruxia_sms_user,afruxia.sms.user,model_afruxia_sms,base.group_user,1,1,1,1
 access_afruxia_sms_manager,afruxia.sms.manager,model_afruxia_sms,base.group_system,1,1,1,1
+access_sms_mass_sending_wizard_user,sms.mass.sending.wizard.user,model_sms_mass_sending_wizard,base.group_user,1,1,1,1
+access_sms_mass_sending_wizard_manager,sms.mass.sending.wizard.manager,model_sms_mass_sending_wizard,base.group_system,1,1,1,1

@@ -23,6 +23,12 @@
               action="action_afruxia_sms"
               sequence="10"/>
 
+    <menuitem id="menu_afruxia_sms_mass"
+              name="Envoi en masse"
+              parent="menu_afruxia_sms"
+              action="action_sms_mass_sending_wizard"
+              sequence="20"/>
+
     <!-- SOUS-MENU : Configuration -->
     <menuitem id="menu_afruxia_config"
               name="Configuration"

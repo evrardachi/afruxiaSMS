@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Ce fichier indique à Python que c'est un module
-# Il importe le dossier 'models' qui contient notre logique métier
+# Il importe les dossiers contenant notre code
 
 from . import models
+from . import wizard

@@ -27,6 +27,7 @@
         # Vues (interfaces utilisateur)
         'views/afruxia_config_views.xml',
         'views/afruxia_sms_views.xml',
+        'views/sms_mass_sending_wizard_views.xml',
         'views/menu_views.xml',
     ],
     'images': ['static/description/icon.png'],

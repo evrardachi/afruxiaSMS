@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Vue pour l'assistant d'envoi de SMS en masse.
+-->
+<odoo>
+
+    <!-- Vue FORMULAIRE du wizard -->
+    <record id="view_sms_mass_sending_wizard_form" model="ir.ui.view">
+        <field name="name">sms.mass.sending.wizard.form</field>
+        <field name="model">sms.mass.sending.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Envoi de SMS en masse">
+                <sheet>
+                    <group>
+                        <group string="Configuration">
+                            <field name="config_id" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+
+                    <group string="Destinataires">
+                        <field name="recipient_selection" widget="radio"/>
+                    </group>
+
+                    <!-- Saisie manuelle -->
+                    <group string="Numéros de téléphone" invisible="recipient_selection != 'manual'">
+                        <field name="recipients_manual" nolabel="1"
+                               placeholder="Entrez les numéros de téléphone (un par ligne ou séparés par des virgules)&#10;Exemple:&#10;+242XXXXXXXXX&#10;+242YYYYYYYYY"
+                               widget="text"/>
+                    </group>
+
+                    <!-- Sélection depuis les contacts -->
+                    <group string="Sélectionner les contacts" invisible="recipient_selection != 'partners'">
+                        <field name="partner_ids" nolabel="1" widget="many2many_tags">
+                            <list>
+                                <field name="name"/>
+                                <field name="mobile"/>
+                            </list>
+                        </field>
+                    </group>
+
+                    <group string="Message">
+                        <field name="message" nolabel="1"
+                               placeholder="Tapez votre message ici..."
+                               widget="text"/>
+                    </group>
+
+                    <!-- Statistiques -->
+                    <group>
+                        <group string="Statistiques du message">
+                            <field name="character_count"/>
+                            <field name="sms_count"/>
+                        </group>
+                        <group string="Statistiques d'envoi">
+                            <field name="recipient_count"/>
+                            <field name="total_sms_count"
+                                   decoration-danger="total_sms_count > 100"
+                                   decoration-warning="total_sms_count > 50"
+                                   decoration-success="total_sms_count > 0 and total_sms_count &lt;= 50"/>
+                        </group>
+                    </group>
+
+                    <!-- Message d'avertissement si beaucoup de SMS -->
+                    <div class="alert alert-warning" role="alert"
+                         invisible="total_sms_count &lt;= 100">
+                        <strong>Attention !</strong> Vous êtes sur le point d'envoyer
+                        <field name="total_sms_count" readonly="1"/> SMS.
+                        Vérifiez bien votre message et vos destinataires.
+                    </div>
+
+                </sheet>
+
+                <!-- Boutons en bas -->
+                <footer>
+                    <button string="Aperçu"
+                            name="action_preview"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="recipient_count == 0"/>
+                    <button string="Envoyer"
+                            name="action_send_sms"
+                            type="object"
+                            class="btn-primary"
+                            invisible="recipient_count == 0"/>
+                    <button string="Annuler"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- ACTION pour ouvrir le wizard -->
+    <record id="action_sms_mass_sending_wizard" model="ir.actions.act_window">
+        <field name="name">Envoi de SMS en masse</field>
+        <field name="res_model">sms.mass.sending.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field> <!-- Ouvre dans une popup -->
+        <field name="binding_model_id" ref="model_afruxia_sms"/>
+    </record>
+
+</odoo>
