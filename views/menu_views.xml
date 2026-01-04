@@ -35,13 +35,7 @@
               name="Envoi en masse"
               parent="menu_afruxia_sms"
               action="action_sms_mass_sending_wizard"
-              sequence="15"/>
-
-    <menuitem id="menu_afruxia_sms_mass_alt"
-              name="SMS en masse"
-              parent="menu_afruxia_sms"
-              action="action_sms_mass_sending_wizard"
-              sequence="16"/>
+              sequence="20"/>
 
     <!-- SOUS-MENU : Configuration -->
     <menuitem id="menu_afruxia_config"
