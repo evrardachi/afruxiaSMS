@@ -1,10 +1,70 @@
+# ============================================
+# .gitignore pour module Odoo afruxiaSMS
+# N'autorise que le README.md et les fichiers
+# essentiels du module
+# ============================================
+
+# Ignorer tous les fichiers markdown SAUF README.md
 *.md
-*.txt
+!README.md
+
+# Fichiers Python compilés
 *.pyc
+*.pyo
 __pycache__/
-.env
+*.so
+
+# Fichiers de logs
 *.log
-.odoo/
+
+# Fichiers de configuration locale
+.env
+*.conf
+config.ini
+
+# Fichiers temporaires
+*.tmp
+*.bak
+*.swp
+*~
+.DS_Store
+
+# Dossiers IDE
 .idea/
 .vscode/
+*.code-workspace
+
+# Dossiers Odoo
+.odoo/
+filestore/
+sessions/
+
+# Bases de données
 *.sqlite
+*.db
+
+# Documentation et guides (sauf README.md)
+# GUIDE_DEBUTANT.md sera ignoré
+# INSTALLATION.md sera ignoré
+# Tous les autres .md seront ignorés
+
+# Fichiers de diagnostic et de test
+*.sql
+DIAGNOSTIC*.sql
+TEST*.txt
+
+# Fichiers texte (sauf si nécessaire)
+*.txt
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+*.rar
+
+# Images temporaires (garde les images dans static/description/)
+# Si vous voulez ignorer toutes les images :
+# *.png
+# *.jpg
+# *.jpeg
+# *.gif
